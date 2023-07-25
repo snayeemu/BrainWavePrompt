@@ -2,11 +2,22 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
-import React from "react";
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 
 const Nav = () => {
   const isUserLogged = true;
+  // 1:10
+  const [providers, setProviders] = useState(null);
+
+  useEffect(() => {
+    const settingProviders = async () => {
+      const response = await getProviders();
+      setProviders(response);
+    };
+
+    settingProviders();
+  }, []);
 
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -32,10 +43,31 @@ const Nav = () => {
             <button type="button" onClick={signOut} className="outline_btn">
               Sign Out
             </button>
-            {/* 01:06 */}
+
+            <Link href={"/profile"}>
+              <Image
+                src="/assets/images/logo.svg"
+                width={37}
+                height={37}
+                className="rounded-full"
+                alt="profile"
+              />
+            </Link>
           </div>
         ) : (
-          <></>
+          <>
+            {providers &&
+              Object.values(providers).map((provider) => (
+                <button
+                  type="button"
+                  key={provider.name}
+                  onClick={() => signIn(provider.id)}
+                  className="black_btn"
+                >
+                  Sign In
+                </button>
+              ))}
+          </>
         )}
       </div>
     </nav>
