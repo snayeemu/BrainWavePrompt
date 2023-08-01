@@ -5,8 +5,8 @@ import { signIn } from "next-auth/react";
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: "",
-      clientSecret: "",
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
   async session({ session }) {},
@@ -14,4 +14,3 @@ const handler = NextAuth({
 });
 
 export { handler as GET, handler as POST };
-// 1:20
